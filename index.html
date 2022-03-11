@@ -10,40 +10,53 @@
 </head>
 
 <body>
-    <div id="display">
+    <div id="mainContainer">
+        <div id="display">
+            45
+        </div>
+        <div id="bodyContainer">
+            <div id="digitContainer">
+                <div id="firstRow" class="row">
+                    <button class="operator" id="clear">C</button>
 
+                </div>
+                <div id="secondRow" class="row">
+                    <button class="digit">7</button>
+                    <button class="digit">8</button>
+                    <button class="digit">9</button>
+
+                </div>
+                <div id="thirdRow" class="row">
+                    <button class="digit">4</button>
+                    <button class="digit">5</button>
+                    <button class="digit">6</button>
+
+                </div>
+                <div id="fourthRow" class="row">
+                    <button class="digit">1</button>
+                    <button class="digit">2</button>
+                    <button class="digit">3</button>
+
+                </div>
+                <div id="fithRow" class="row">
+                    <button class="digit">0</button>
+                    <button>,</button>
+
+                </div>
+
+
+            </div>
+
+            <div id="operatorContainer">
+                <button class="operator" id="divideBtn">÷</button>
+                <button class="operator" id="multiplyBtn">x</button>
+                <button class="operator" id="subtractBtn">-</button>
+                <button class="operator" id="addBtn">+</button>
+                <button class="operator" id="equalsBtn">=</button>
+            </div>
+        </div>
     </div>
-    <div id="digitContainer">
-        <div id="firstRow">
-            <button class="digit">7</button>
-            <button class="digit">8</button>
-            <button class="digit">9</button>
-        </div>
-        <div id="secondRow">
-            <button class="digit">4</button>
-            <button class="digit">5</button>
-            <button class="digit">6</button>
-        </div>
-        <div id="thirdRow">
-            <button class="digit">1</button>
-            <button class="digit">2</button>
-            <button class="digit">3</button>
-        </div>
-        <div id="fourthRow">
-            <button class="digit">0</button>
-            <button class="operator">,</button>
-        </div>
 
-
-
-
-        <button class="operator" id="clear">C</button>
-        <button class="operator" id="addBtn">+</button>
-        <button class="operator" id="subtractBtn">-</button>
-        <button class="operator" id="multiplyBtn">*</button>
-        <button class="operator" id="divideBtn">/</button>
-        <button class="operator" id="equalsBtn">=</button>
-    </div>
 
     <script src="./script.js"></script>
 </body>
