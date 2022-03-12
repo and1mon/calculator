@@ -15,9 +15,16 @@ button{
     margin: 2px;
 }
 
-.operator{
+
+
+.operator, .special{
     background-color: #270082;
     color: #F5F5F5;
+}
+
+.highlighted{
+    background-color: #FA58B6;
+    color: #270082;
 }
 
 .row{
