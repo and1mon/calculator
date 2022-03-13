@@ -3,12 +3,18 @@ const operatorButtons = document.querySelectorAll(".operator");
 const highlightOnClickBtns = document.querySelectorAll(".highlightOnClick");
 const display = document.getElementById("display");
 const clearBtn = document.getElementById("clear");
+const decimalPoint = document.getElementById("decimalPoint");
 
 let currentOperatorBtn;
 let firstValue = 0;
 let secondValue = "";
 let currentOperator = "";
 let isResult = false;
+let valueDisplayed = firstValue;
+let displayFull = false;
+let decimalPointActive = false;
+
+decimalPoint.addEventListener("click", () => {decimalPointActive = true;})
 
 clearBtn.addEventListener("click", clearAll);
 
@@ -63,6 +69,16 @@ function divide(dividend, divisor) {
 
 function selectDigit() {
 
+    if(countDigits(valueDisplayed) === 9 && (!currentOperator || currentOperator === "equals")){
+       displayFull = true;
+    }
+
+    if(displayFull){
+        alert("Cannot enter more than 9 digits");
+        clearAll();
+        return
+    }
+
     let buttonValue = parseInt(this.innerText);
 
     if (isResult && currentOperator === "equals") {
@@ -85,10 +101,13 @@ function selectDigit() {
 }
 
 function updateDisplay() {
-    if (!secondValue)
+    if (!secondValue) {
         display.innerText = `${firstValue}`;
+        valueDisplayed = firstValue;
+    }
     else {
         display.innerText = `${secondValue}`
+        valueDisplayed = secondValue;
     }
 }
 
@@ -96,9 +115,16 @@ function selectOperator() {
 
     if (currentOperator != "equals" && (secondValue || secondValue === 0)) {
         calculate();
+        if(firstValue > 999999999){
+            alert("Cannot display more than 9 digits");
+            clearAll();
+            return;
+        }
     }
+     isResult = true;
 
     currentOperator = this.id;
+    displayFull = false;
     updateDisplay();
 }
 
@@ -117,11 +143,10 @@ function highlightOperator() {
 
 function calculate() {
     firstValue = operate(currentOperator, firstValue, secondValue);
-    if(countDecimals(firstValue) > 5){
+    if (countDecimals(firstValue) > 5) {
         firstValue = Math.round(firstValue * 100000) / 100000;
     }
     secondValue = "";
-    isResult = true;
 }
 
 function highlightDigitBtn() {
@@ -131,6 +156,7 @@ function highlightDigitBtn() {
 function clearAll() {
     firstValue = 0;
     secondValue = "";
+    displayFull = false;
 
     if (currentOperatorBtn) {
         currentOperatorBtn.classList.remove("highlighted");
@@ -141,20 +167,25 @@ function clearAll() {
     updateDisplay();
 }
 
-function countDecimals(number){
+function countDecimals(number) {
     number = number.toString();
     let hasDecimals = false;
     let decimalCounter = 0;
 
-    for(let i = 0; i < number.length; i++){
-        if(hasDecimals){
+    for (let i = 0; i < number.length; i++) {
+        if (hasDecimals) {
             decimalCounter++;
         }
-        
-        if(number[i] === "." || number[i] === ","){
+
+        if (number[i] === "." || number[i] === ",") {
             hasDecimals = true;
         }
     }
 
     return decimalCounter;
+}
+
+function countDigits(number) {
+    number = number.toString();
+    return number.length;
 }
