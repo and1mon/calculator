@@ -1,24 +1,43 @@
 const digitButtons = document.querySelectorAll(".digit");
 const operatorButtons = document.querySelectorAll(".operator");
+const highlightOnClickBtns = document.querySelectorAll(".highlightOnClick");
 const display = document.getElementById("display");
-let highlightedOperator;
+const clearBtn = document.getElementById("clear");
+
+let currentOperatorBtn;
 let firstValue = 0;
 let secondValue = "";
-let currentOperator;
-let currentOperatorDisplay;
+let currentOperator = "";
+let isResult = false;
 
+clearBtn.addEventListener("click", clearAll);
 
+highlightOnClickBtns.forEach(button => {
+    button.addEventListener("mousedown", highlightDigitBtn);
+    button.addEventListener("mouseup", highlightDigitBtn);
+});
 
 operatorButtons.forEach(operatorButton => {
-    operatorButton.addEventListener("click", selectOperator)
+    operatorButton.addEventListener("click", highlightOperator);
+    operatorButton.addEventListener("click", selectOperator);
 });
 
 digitButtons.forEach(digitButton => {
-    digitButton.addEventListener("click", selectDigit)
+    digitButton.addEventListener("click", selectDigit);
 });
 
+
 function operate(operator, number1, number2) {
-    return operator(number1, number2);
+    switch (operator) {
+        case "add": return add(number1, number2);
+            break;
+        case "subtract": return subtract(number1, number2);
+            break;
+        case "multiply": return multiply(number1, number2);
+            break;
+        case "divide": return divide(number1, number2);
+            break;
+    }
 }
 
 function add(addend1, addend2) {
@@ -29,68 +48,113 @@ function subtract(minuend, subtrahend) {
     return minuend - subtrahend;
 }
 
-
 function multiply(factor1, factor2) {
     return factor1 * factor2;
 }
 
 function divide(dividend, divisor) {
-    return dividend / divisor;
+    console.log(divisor);
+    if (divisor != 0) {
+        return dividend / divisor;
+    }
+    alert("You cannot divide by zero!");
+    return dividend;
 }
 
 function selectDigit() {
 
     let buttonValue = parseInt(this.innerText);
 
-    if (!currentOperator) {
+    if (isResult && currentOperator === "equals") {
+        firstValue = buttonValue;
+        isResult = false;
+    }
+
+    else if (!currentOperator || currentOperator === "equals") {
         firstValue *= 10;
         firstValue += buttonValue;
     }
+
     else {
-        console.log("works")
         secondValue *= 10;
         secondValue += buttonValue;
+        currentOperatorBtn.classList.remove("highlighted");
     }
 
-
     updateDisplay();
-
 }
 
 function updateDisplay() {
-    if (!currentOperator)
+    if (!secondValue)
         display.innerText = `${firstValue}`;
     else {
-        display.innerText = `${firstValue} ${currentOperatorDisplay} ${secondValue}`
+        display.innerText = `${secondValue}`
     }
 }
 
 function selectOperator() {
 
-    if (highlightedOperator) {
-        highlightedOperator.classList.remove("highlighted");
+    if (currentOperator != "equals" && (secondValue || secondValue === 0)) {
+        calculate();
     }
+
     currentOperator = this.id;
-    highlightedOperator = this;
-    highlightedOperator.classList.add("highlighted");
-
-    setCurrentOperatorDisplay();
-
     updateDisplay();
-
-
-
 }
 
-function setCurrentOperatorDisplay() {
-    switch (currentOperator) {
-        case "add": currentOperatorDisplay = "+";
-            break;
-        case "subtract": currentOperatorDisplay = "-";
-            break;
-        case "multiply": currentOperatorDisplay = "*";
-            break;
-        case "divide": currentOperatorDisplay = "/";
-            break;
+function highlightOperator() {
+
+    if (currentOperatorBtn) {
+        currentOperatorBtn.classList.remove("highlighted");
     }
+
+    currentOperatorBtn = this;
+
+    if (currentOperatorBtn.classList.contains("mathSign")) {
+        currentOperatorBtn.classList.add("highlighted");
+    }
+}
+
+function calculate() {
+    firstValue = operate(currentOperator, firstValue, secondValue);
+    if(countDecimals(firstValue) > 5){
+        firstValue = Math.round(firstValue * 100000) / 100000;
+    }
+    secondValue = "";
+    isResult = true;
+}
+
+function highlightDigitBtn() {
+    this.classList.toggle("highlighted");
+}
+
+function clearAll() {
+    firstValue = 0;
+    secondValue = "";
+
+    if (currentOperatorBtn) {
+        currentOperatorBtn.classList.remove("highlighted");
+        currentOperatorBtn = null;
+    }
+
+    currentOperator = "";
+    updateDisplay();
+}
+
+function countDecimals(number){
+    number = number.toString();
+    let hasDecimals = false;
+    let decimalCounter = 0;
+
+    for(let i = 0; i < number.length; i++){
+        if(hasDecimals){
+            decimalCounter++;
+        }
+        
+        if(number[i] === "." || number[i] === ","){
+            hasDecimals = true;
+        }
+    }
+
+    return decimalCounter;
 }

@@ -38,6 +38,10 @@ button{
     text-align: end;
     color: #FA58B6;
     height: 45px;
+    font-size: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
 }
 
 #mainContainer{
