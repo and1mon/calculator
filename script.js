@@ -7,14 +7,16 @@ const decimalPoint = document.getElementById("decimalPoint");
 
 let currentOperatorBtn;
 let firstValue = 0;
+let fullValue = 0;
 let secondValue = "";
 let currentOperator = "";
 let isResult = false;
 let valueDisplayed = firstValue;
 let displayFull = false;
 let decimalPointActive = false;
+let decimalValue = 0;
 
-decimalPoint.addEventListener("click", () => {decimalPointActive = true;})
+decimalPoint.addEventListener("click", () => { decimalPointActive = true; })
 
 clearBtn.addEventListener("click", clearAll);
 
@@ -69,11 +71,11 @@ function divide(dividend, divisor) {
 
 function selectDigit() {
 
-    if(countDigits(valueDisplayed) === 9 && (!currentOperator || currentOperator === "equals")){
-       displayFull = true;
+    if (countDigits(valueDisplayed) === 9 && (!currentOperator || currentOperator === "equals")) {
+        displayFull = true;
     }
 
-    if(displayFull){
+    if (displayFull) {
         alert("Cannot enter more than 9 digits");
         clearAll();
         return
@@ -82,19 +84,36 @@ function selectDigit() {
     let buttonValue = parseInt(this.innerText);
 
     if (isResult && currentOperator === "equals") {
-        firstValue = buttonValue;
+        fullValue = buttonValue;
+        firstValue = fullValue;
         isResult = false;
     }
 
     else if (!currentOperator || currentOperator === "equals") {
-        firstValue *= 10;
-        firstValue += buttonValue;
+        if (decimalPointActive) {
+            decimalValue *= 10;
+            decimalValue += buttonValue;
+            firstValue = fullValue + (decimalValue / Math.pow(10, countDigits(decimalValue)));
+        }
+        else {
+            fullValue *= 10;
+            fullValue += buttonValue;
+            firstValue = fullValue;
+        }
     }
 
     else {
-        secondValue *= 10;
-        secondValue += buttonValue;
-        currentOperatorBtn.classList.remove("highlighted");
+        if (decimalPointActive) {
+            decimalValue *= 10;
+            decimalValue += buttonValue;
+            secondValue = fullValue + (decimalValue / Math.pow(10, countDigits(decimalValue)));
+        }
+        else {
+            fullValue *= 10;
+            fullValue += buttonValue;
+            secondValue = fullValue;
+            currentOperatorBtn.classList.remove("highlighted");
+        }
     }
 
     updateDisplay();
@@ -115,16 +134,19 @@ function selectOperator() {
 
     if (currentOperator != "equals" && (secondValue || secondValue === 0)) {
         calculate();
-        if(firstValue > 999999999){
+        if (firstValue > 999999999) {
             alert("Cannot display more than 9 digits");
             clearAll();
             return;
         }
     }
-     isResult = true;
+    isResult = true;
 
     currentOperator = this.id;
     displayFull = false;
+    decimalPointActive = false;
+    fullValue = 0;
+    decimalValue = 0;
     updateDisplay();
 }
 
@@ -147,6 +169,9 @@ function calculate() {
         firstValue = Math.round(firstValue * 100000) / 100000;
     }
     secondValue = "";
+    decimalValue = 0;
+    fullValue = 0;
+    decimalPointActive = false;
 }
 
 function highlightDigitBtn() {
@@ -157,6 +182,9 @@ function clearAll() {
     firstValue = 0;
     secondValue = "";
     displayFull = false;
+    decimalValue = 0;
+    fullValue = 0;
+    decimalPointActive = false;
 
     if (currentOperatorBtn) {
         currentOperatorBtn.classList.remove("highlighted");
