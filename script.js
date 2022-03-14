@@ -7,16 +7,19 @@ const decimalPoint = document.getElementById("decimalPoint");
 
 let currentOperatorBtn;
 let firstValue = 0;
-let fullValue = 0;
 let secondValue = "";
 let currentOperator = "";
-let isResult = false;
-let valueDisplayed = firstValue;
+let isResult = true;
 let displayFull = false;
 let decimalPointActive = false;
-let decimalValue = 0;
 
-decimalPoint.addEventListener("click", () => { decimalPointActive = true; })
+decimalPoint.addEventListener("click", () => {
+    if (decimalPointActive) {
+        return;
+    }
+    decimalPointActive = true;
+    display.innerText += ".";
+})
 
 clearBtn.addEventListener("click", clearAll);
 
@@ -71,7 +74,7 @@ function divide(dividend, divisor) {
 
 function selectDigit() {
 
-    if (countDigits(valueDisplayed) === 9 && (!currentOperator || currentOperator === "equals")) {
+    if (countDigits(display.innerText) === 9 && !isResult) {
         displayFull = true;
     }
 
@@ -81,52 +84,37 @@ function selectDigit() {
         return
     }
 
-    let buttonValue = parseInt(this.innerText);
+    let buttonValue = this.innerText;
 
-    if (isResult && currentOperator === "equals") {
-        fullValue = buttonValue;
-        firstValue = fullValue;
-        isResult = false;
-    }
 
-    else if (!currentOperator || currentOperator === "equals") {
-        if (decimalPointActive) {
-            decimalValue *= 10;
-            decimalValue += buttonValue;
-            firstValue = fullValue + (decimalValue / Math.pow(10, countDigits(decimalValue)));
+    if (!currentOperator) {
+        if (display.innerText === `0` || isResult) {
+            display.innerText = buttonValue;
+            firstValue = parseInt(display.innerText);
+        }
+        else if (decimalPointActive) {
+            display.innerText += buttonValue;
+            firstValue = parseFloat(display.innerText);
         }
         else {
-            fullValue *= 10;
-            fullValue += buttonValue;
-            firstValue = fullValue;
+            display.innerText += buttonValue;
+            firstValue = parseInt(display.innerText);
         }
     }
 
     else {
-        if (decimalPointActive) {
-            decimalValue *= 10;
-            decimalValue += buttonValue;
-            secondValue = fullValue + (decimalValue / Math.pow(10, countDigits(decimalValue)));
+        if (display.innerText === `${firstValue}`) {
+            display.innerText = buttonValue;
+            secondValue = parseFloat(display.innerText);
+        }
+        else if (decimalPointActive) {
+            display.innerText += buttonValue;
+            secondValue = parseFloat(display.innerText);
         }
         else {
-            fullValue *= 10;
-            fullValue += buttonValue;
-            secondValue = fullValue;
-            currentOperatorBtn.classList.remove("highlighted");
+            display.innerText += buttonValue;
+            secondValue = parseInt(display.innerText);
         }
-    }
-
-    updateDisplay();
-}
-
-function updateDisplay() {
-    if (!secondValue) {
-        display.innerText = `${firstValue}`;
-        valueDisplayed = firstValue;
-    }
-    else {
-        display.innerText = `${secondValue}`
-        valueDisplayed = secondValue;
     }
 }
 
@@ -145,8 +133,6 @@ function selectOperator() {
     currentOperator = this.id;
     displayFull = false;
     decimalPointActive = false;
-    fullValue = 0;
-    decimalValue = 0;
     updateDisplay();
 }
 
@@ -168,10 +154,10 @@ function calculate() {
     if (countDecimals(firstValue) > 5) {
         firstValue = Math.round(firstValue * 100000) / 100000;
     }
+    display.innerText = firstValue;
     secondValue = "";
-    decimalValue = 0;
-    fullValue = 0;
     decimalPointActive = false;
+
 }
 
 function highlightDigitBtn() {
@@ -179,11 +165,10 @@ function highlightDigitBtn() {
 }
 
 function clearAll() {
+    display.innerText = "0";
     firstValue = 0;
     secondValue = "";
     displayFull = false;
-    decimalValue = 0;
-    fullValue = 0;
     decimalPointActive = false;
 
     if (currentOperatorBtn) {
