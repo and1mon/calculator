@@ -143,9 +143,7 @@ function highlightOperator() {
 
     currentOperatorBtn = this;
 
-    if (currentOperatorBtn.classList.contains("mathSign")) {
-        currentOperatorBtn.classList.add("highlighted");
-    }
+    currentOperatorBtn.classList.add("highlighted");
 }
 
 function equals() {
@@ -160,6 +158,9 @@ function equals() {
     }
     display.innerText = firstValue;
     currentOperator = "";
+    if (currentOperatorBtn) {
+        currentOperatorBtn.classList.remove("highlighted");
+    }
     isResult = true;
 
 }

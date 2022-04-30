@@ -4,6 +4,7 @@ body {
     align-items: center;
     justify-content: center;
     background-color: silver;
+    font-family: "Times New Roman", serif;
 }
 
 button {
@@ -23,11 +24,6 @@ button {
 #equals {
     background-color: orange;
     color: #222831;
-}
-
-.highlighted {
-    background-color: silver;
-    color: #270082;
 }
 
 .row {
@@ -68,10 +64,9 @@ button {
     flex: 2;
 }
 
-.footer {
-    font-size: 6rem;
-    background-color: 3a4750;
-    margin-top: auto;
+.highlighted {
+    background-color: silver !important;
+    color: #270082 !important;
 }
 
 @media only screen and (max-width: 768px) {
