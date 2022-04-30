@@ -66,3 +66,17 @@ button {
 #decimalPoint {
     flex: 2;
 }
+
+.footer {
+    font-size: 6rem;
+    background-color: 3a4750;
+    margin-top: auto;
+}
+
+@media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+    #mainContainer {
+        margin-top: 0px;
+        width: 300px;
+    }
+}
