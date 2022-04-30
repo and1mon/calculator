@@ -4,12 +4,13 @@ const highlightOnClickBtns = document.querySelectorAll(".highlightOnClick");
 const display = document.getElementById("display");
 const clearBtn = document.getElementById("clear");
 const decimalPoint = document.getElementById("decimalPoint");
+const equalsBtn = document.getElementById("equals");
 
 let currentOperatorBtn;
 let firstValue = 0;
 let secondValue = "";
 let currentOperator = "";
-let isResult = true;
+let isResult = false;
 let displayFull = false;
 let decimalPointActive = false;
 
@@ -17,9 +18,18 @@ decimalPoint.addEventListener("click", () => {
     if (decimalPointActive) {
         return;
     }
+
+    if (isResult) {
+        display.innerText = "0.";
+        isResult = false;
+    } else {
+        display.innerText += ".";
+    }
+
     decimalPointActive = true;
-    display.innerText += ".";
 })
+
+equalsBtn.addEventListener("click", equals);
 
 clearBtn.addEventListener("click", clearAll);
 
@@ -40,13 +50,17 @@ digitButtons.forEach(digitButton => {
 
 function operate(operator, number1, number2) {
     switch (operator) {
-        case "add": return add(number1, number2);
+        case "add":
+            return add(number1, number2);
             break;
-        case "subtract": return subtract(number1, number2);
+        case "subtract":
+            return subtract(number1, number2);
             break;
-        case "multiply": return multiply(number1, number2);
+        case "multiply":
+            return multiply(number1, number2);
             break;
-        case "divide": return divide(number1, number2);
+        case "divide":
+            return divide(number1, number2);
             break;
     }
 }
@@ -64,7 +78,6 @@ function multiply(factor1, factor2) {
 }
 
 function divide(dividend, divisor) {
-    console.log(divisor);
     if (divisor != 0) {
         return dividend / divisor;
     }
@@ -79,61 +92,47 @@ function selectDigit() {
     }
 
     if (displayFull) {
-        alert("Cannot enter more than 9 digits");
+        alert("Cannot enter so many digits");
         clearAll();
         return
     }
 
     let buttonValue = this.innerText;
 
-
     if (!currentOperator) {
         if (display.innerText === `0` || isResult) {
             display.innerText = buttonValue;
             firstValue = parseInt(display.innerText);
-        }
-        else if (decimalPointActive) {
+        } else {
             display.innerText += buttonValue;
             firstValue = parseFloat(display.innerText);
         }
-        else {
+    } else {
+        if (display.innerText == `${firstValue}`) {
+            display.innerText = buttonValue;
+            secondValue = parseFloat(display.innerText);
+        } else {
             display.innerText += buttonValue;
-            firstValue = parseInt(display.innerText);
+            secondValue = parseFloat(display.innerText);
+        }
+
+        if (currentOperatorBtn) {
+            currentOperatorBtn.classList.remove("highlighted");
+            currentOperatorBtn = null;
         }
     }
 
-    else {
-        if (display.innerText === `${firstValue}`) {
-            display.innerText = buttonValue;
-            secondValue = parseFloat(display.innerText);
-        }
-        else if (decimalPointActive) {
-            display.innerText += buttonValue;
-            secondValue = parseFloat(display.innerText);
-        }
-        else {
-            display.innerText += buttonValue;
-            secondValue = parseInt(display.innerText);
-        }
-    }
+    isResult = false;
 }
 
 function selectOperator() {
 
-    if (currentOperator != "equals" && (secondValue || secondValue === 0)) {
-        calculate();
-        if (firstValue > 999999999) {
-            alert("Cannot display more than 9 digits");
-            clearAll();
-            return;
-        }
+    if ((secondValue || secondValue === 0)) {
+        equals();
     }
-    isResult = true;
-
     currentOperator = this.id;
     displayFull = false;
     decimalPointActive = false;
-    updateDisplay();
 }
 
 function highlightOperator() {
@@ -149,12 +148,27 @@ function highlightOperator() {
     }
 }
 
+function equals() {
+
+    if ((secondValue || secondValue === 0)) {
+        calculate();
+        if (firstValue > 999999999) {
+            alert("Cannot display more than 9 digits");
+            clearAll();
+            return;
+        }
+    }
+    display.innerText = firstValue;
+    currentOperator = "";
+    isResult = true;
+
+}
+
 function calculate() {
     firstValue = operate(currentOperator, firstValue, secondValue);
     if (countDecimals(firstValue) > 5) {
         firstValue = Math.round(firstValue * 100000) / 100000;
     }
-    display.innerText = firstValue;
     secondValue = "";
     decimalPointActive = false;
 
@@ -177,7 +191,6 @@ function clearAll() {
     }
 
     currentOperator = "";
-    updateDisplay();
 }
 
 function countDecimals(number) {
@@ -194,7 +207,6 @@ function countDecimals(number) {
             hasDecimals = true;
         }
     }
-
     return decimalCounter;
 }
 

@@ -1,65 +1,68 @@
-body{
+body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #1A1A40;
+    justify-content: center;
+    background-color: silver;
 }
 
-button{
-    width: 45px;
-    height: 45px;
-    border-radius: 70px;
+button {
+    width: 3.5em;
+    height: 3.5em;
+    border-radius: 2em;
     border: none;
     text-align: center;
-    background-color: #F5F5F5;
-    margin: 0;
-}
-
-
-
-.operator, .special{
-    background-color: #270082;
+    background-color: #393E46;
     color: #F5F5F5;
+    margin: 0;
+    font-size: 20px;
 }
 
-.highlighted{
-    background-color: #FA58B6;
+.operator,
+.special,
+#equals {
+    background-color: orange;
+    color: #222831;
+}
+
+.highlighted {
+    background-color: silver;
     color: #270082;
 }
 
-.row{
+.row {
     display: flex;
     justify-content: space-between;
     margin-top: 5px;
     gap: 5px;
 }
 
-#display{
-    background-color: #04293A;
+#display {
+    background-color: black;
     text-align: end;
-    color: #FA58B6;
-    height: 45px;
-    font-size: 35px;
+    color: #F5F5F5;
+    height: 80px;
+    font-size: 60px;
     display: flex;
     align-items: center;
     justify-content: end;
 }
 
-#mainContainer{
-    background-color: #7A0BC0;
+#mainContainer {
+    margin-top: 200px;
+    background-color: #222831;
     padding: 10px;
-    border-radius: 10px;
-    width: 200px;
+    border-radius: 2px;
+    width: 320px;
+    box-shadow: 10px 10px 3px rgb(49, 49, 49);
 }
 
-
-#bodyContainer{
+#bodyContainer {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
 }
 
-#decimalPoint{
+#decimalPoint {
     flex: 2;
 }
-
