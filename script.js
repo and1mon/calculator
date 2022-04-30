@@ -152,7 +152,7 @@ function equals() {
 
     if ((secondValue || secondValue === 0)) {
         calculate();
-        if (firstValue > 999999999) {
+        if (countDigits(firstValue) > 9) {
             alert("Cannot display more than 9 digits");
             clearAll();
             return;
